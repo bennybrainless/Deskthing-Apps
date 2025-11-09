@@ -3,6 +3,7 @@ import { createDeskThing } from "@deskthing/client";
 import { DiscordEvents, ToClientTypes, ToServerTypes } from "@shared/types/transit";
 import { AppSettings, DEVICE_CLIENT } from "@deskthing/types";
 import { AppSettingIDs, CLOCK_OPTIONS, DASHBOARD_ELEMENTS, DiscordSettings, PANEL_ELEMENTS, SONG_CONTROLS } from "@shared/types/discord";
+import { XL_CONTROL_MIN_HEIGHT, XL_CONTROLS_ENABLED } from "@src/constants/xlControls";
 import { validateDiscordSettings } from "@src/utils/settingValidator";
 
 export type Page = "chat" | "browsing" | "call" | "dashboard";
@@ -57,6 +58,8 @@ type UIStore = {
 
 const DeskThing = createDeskThing<ToClientTypes, ToServerTypes>();
 
+const controlHeight = XL_CONTROLS_ENABLED ? XL_CONTROL_MIN_HEIGHT : 75;
+
 export const useUIStore = create<UIStore>((set, get) => ({
   currentPage: "dashboard",
   initialized: false,
@@ -73,11 +76,11 @@ export const useUIStore = create<UIStore>((set, get) => ({
     height: window.innerHeight,
     panel: {
       width: window.innerWidth / 2,
-      height: window.innerHeight - 75,
+      height: Math.max(window.innerHeight - controlHeight, 0),
     },
     controls: {
       width: window.innerWidth,
-      height: 75,
+      height: controlHeight,
     }
   },
 
