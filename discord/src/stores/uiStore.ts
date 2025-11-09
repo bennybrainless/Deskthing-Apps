@@ -58,7 +58,11 @@ type UIStore = {
 
 const DeskThing = createDeskThing<ToClientTypes, ToServerTypes>();
 
-const controlHeight = XL_CONTROLS_ENABLED ? XL_CONTROL_MIN_HEIGHT : 75;
+const defaultWidgets: DASHBOARD_ELEMENTS[] = [];
+const baseControlHeight = XL_CONTROLS_ENABLED ? XL_CONTROL_MIN_HEIGHT : 75;
+const defaultControlsHeight = defaultWidgets.includes(DASHBOARD_ELEMENTS.CALL_CONTROLS)
+  ? baseControlHeight
+  : 0;
 
 export const useUIStore = create<UIStore>((set, get) => ({
   currentPage: "dashboard",
@@ -69,18 +73,18 @@ export const useUIStore = create<UIStore>((set, get) => ({
   song_controls: SONG_CONTROLS.BOTTOM,
   leftPanel: PANEL_ELEMENTS.GUILD_LIST,
   rightPanel: PANEL_ELEMENTS.BLANK,
-  widgets: [],
+  widgets: [...defaultWidgets],
   clock_options: CLOCK_OPTIONS.DISABLED,
   dimensions: {
     width: window.innerWidth,
     height: window.innerHeight,
     panel: {
       width: window.innerWidth / 2,
-      height: Math.max(window.innerHeight - controlHeight, 0),
+      height: Math.max(window.innerHeight - defaultControlsHeight, 0),
     },
     controls: {
       width: window.innerWidth,
-      height: controlHeight,
+      height: defaultControlsHeight,
     }
   },
 
